@@ -1,7 +1,7 @@
-const AuthLayout = () => {
+const SigninForm = () => {
     return (
         <div>SigninForm</div>
     )
 }
 
-export default AuthLayout
+export default SigninForm

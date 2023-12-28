@@ -1,7 +1,7 @@
-const AuthLayout = () => {
+const Home = () => {
     return (
         <div>Home</div>
     )
 }
 
-export default AuthLayout
+export default Home

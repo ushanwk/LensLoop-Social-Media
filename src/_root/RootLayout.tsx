@@ -1,7 +1,7 @@
-const AuthLayout = () => {
+const RootLayout = () => {
     return (
         <div>RootLayout</div>
     )
 }
 
-export default AuthLayout
+export default RootLayout

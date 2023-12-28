@@ -1,25 +1,31 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from "react-router-dom";
 
-import './globals.css'
-import SigninForm from './_auth/forms/SigninForm'
-import SignupForm from './_auth/forms/SignupForm'
-import { Home } from './_root/pages'
+import "./globals.css";
+import SigninForm from "./_auth/forms/SigninForm";
+import SignupForm from "./_auth/forms/SignupForm";
+import { Home } from "./_root/pages";
+import AuthLayout from "./_auth/AuthLayout";
+import RootLayout from "./_root/RootLayout";
 
 const App = () => {
   return (
-    <main className='flex h-screen'>
-        <Routes>
+    <main className="flex h-screen">
+      <Routes>
 
-          {/*public routes */}
-          <Route path='/sign-in' element={<SigninForm />} />
-          <Route path='/sign-up' element={<SignupForm />} />
+        {/*public routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/sign-in" element={<SigninForm />} />
+          <Route path="/sign-up" element={<SignupForm />} />
+        </Route>
 
-          {/*private routes */}
+        {/*private routes */}
+        <Route element={<RootLayout />}>
           <Route index element={<Home />} />
+        </Route>
 
-        </Routes>
+      </Routes>
     </main>
-  )
-}
+  );
+};
 
-export default App
+export default App;

@@ -1,7 +1,11 @@
-const AuthLayout = () => {
-    return (
-        <div>SignupForm</div>
-    )
-}
+import { Button } from "@/components/ui/button";
 
-export default AuthLayout
+const SignupForm = () => {
+  return (
+    <div>
+      <Button>Click me</Button>
+    </div>
+  );
+};
+
+export default SignupForm
