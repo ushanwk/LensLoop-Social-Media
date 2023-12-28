@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -17,10 +18,16 @@ import { SignupValidation } from "@/lib/validation";
 import { z } from "zod";
 import {Loader} from "@/components/shared/Loader.tsx";
 import {Link} from "react-router-dom";
-import {createUserAccount} from "@/appwrite/api.ts";
+import {useCreateUserAccount, useSignInAccount} from "@/lib/reacct-query/queriesandmutations.ts";
+
 
 const SignupForm = () => {
-    const isLoaded = false;
+    const { toast } = useToast()
+
+    const { mutateAsync: createUserAccount, isLoading: isCreatingUser } = useCreateUserAccount();
+
+    const { mutateAsync: signInAccount, isLoading: isSigningIn } = useSignInAccount()
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
     resolver: zodResolver(SignupValidation),
@@ -36,8 +43,22 @@ const SignupForm = () => {
   async function onSubmit(values: z.infer<typeof SignupValidation>) {
     //Create user
       const newUser = await createUserAccount(values);
-      if(!newUser){
-          return;
+
+      if (!newUser) {
+          return toast({
+              title: "Sign Up failed. Please try again.",
+          });
+      }
+
+      const session = await signInAccount({
+          email: values.email,
+          password: values.password,
+      });
+
+      if (!session) {
+          return toast({
+              title: "Sign In failed. Please try again.",
+          });
       }
   }
 
@@ -110,7 +131,7 @@ const SignupForm = () => {
 
           <Button type="submit" className="shad-button_primary mt-4">
               {
-                  isLoaded ? (
+                  isCreatingUser ? (
                    <div className="flex-center gap-2">
                        <Loader/>Loading...
                    </div>
