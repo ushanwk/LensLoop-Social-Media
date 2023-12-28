@@ -36,21 +36,23 @@ const SignupForm = () => {
   }
 
   return (
-      <Form {...form}>
+    <Form {...form}>
+      <div className="sm:w-420 flex-center flex-col">
+        <h1 className="h1-bold">LensLoop.</h1>
+        <h3 className="text-[20px] pt-4">Create a new Account</h3>
+        <p className="text-light-3 text-[13px]">
+          To use LensLoop enter yout account details
+        </p>
 
-        <div className="sm:w-420 flex-center flex-col">
-          <h1 className="text-[25px] font-bold">LensLoop</h1>
-        </div>
-
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-5 w-full mt-4">
           <FormField
             control={form.control}
-            name="username"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="Enter your name" type="text" className="shad-input" {...field} />
                 </FormControl>
                 <FormDescription>
                   This is your public display name.
@@ -61,7 +63,8 @@ const SignupForm = () => {
           />
           <Button type="submit">Submit</Button>
         </form>
-      </Form>
+      </div>
+    </Form>
   );
 };
 
