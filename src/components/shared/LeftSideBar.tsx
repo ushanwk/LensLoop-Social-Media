@@ -4,6 +4,7 @@ import {useEffect} from "react";
 import {useUserContext} from "@/context/AuthContext.tsx";
 import {sidebarLinks} from "@/constants";
 import {INavLink} from "@/types";
+import {Button} from "@/components/ui/button.tsx";
 
 export const LeftSideBar = () => {
 
@@ -54,6 +55,12 @@ export const LeftSideBar = () => {
                     }
                 </ul>
             </div>
+
+            <Button variant="ghost" className="shad-button_ghost" onClick={() => signOut()}>
+                <img src="/assets/icons/logout.svg" />
+                <p className="small-medium lg:base-medium">Logout</p>
+            </Button>
+
         </nav>
     );
 };
