@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import { IUser } from "@/types";
-import {getCurrentUser} from "@/appwrite/api.ts";
+import { getCurrentUser } from "@/lib/appwrite/api";
 
 export const INITIAL_USER = {
     id: "",
@@ -69,9 +69,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const cookieFallback = localStorage.getItem("cookieFallback");
         if (
-            cookieFallback === "[]" ||
-            cookieFallback === null ||
-            cookieFallback === undefined
+            cookieFallback === "[]"
+            // cookieFallback === null ||
+            // cookieFallback === undefined
         ) {
             navigate("/sign-in");
         }
