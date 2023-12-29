@@ -8,10 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesandmutations.ts";
 import { SignupValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
 import {Loader} from "@/components/shared/Loader.tsx";
-import {useCreateUserAccount, useSignInAccount} from "@/lib/react-query/queriesandmutations.ts";
 
 
 
@@ -64,7 +64,7 @@ const SignupForm = () => {
 
       if(isLoggedIn){
           form.reset();
-            navigate('/')
+          navigate('/')
       }else{
           return toast({
               title: "Sign Up failed. Please try again.",
@@ -130,7 +130,7 @@ const SignupForm = () => {
                 name="password"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                             <Input placeholder="Enter your Password" type="password" className="shad-input" {...field} />
                         </FormControl>
