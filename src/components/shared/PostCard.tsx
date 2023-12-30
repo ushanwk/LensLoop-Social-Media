@@ -36,17 +36,19 @@ export const PostCard = ({ post }: PostCardProps) => {
                 </Link>
             </div>
 
-            <Link to={`/post/${post.$id}`}>
-                <div className="smala-medium lg:base-medium py-5">
+            <Link to={`/posts/${post.$id}`}>
+                <div className="small-medium lg:base-medium py-5">
                     <p>{post.caption}</p>
                     <ul className="flex gap-1 mt-2">
                         {
-                            post.tags.map((tag:string) => {
+                            post.tags.map((tag:string) => (
                                 <li key={tag} className="text-light-3">#{tag}</li>
-                            })
+                            ))
                         }
                     </ul>
                 </div>
+
+                <img src={post.imageUrl || '/assets/icons/profile-placeholder.svg'} className="post-card_img" />
             </Link>
         </div>
     );
