@@ -1,6 +1,7 @@
 import {INewPost, INewUser} from "@/types";
 import {ID, Query} from 'appwrite'
 import {account, appwriteconfig, avatars, databases, storage} from "@/lib/appwrite/config.ts";
+import {data} from "autoprefixer";
 
 export async function createUserAccount(user:INewUser) {
     try{
@@ -159,5 +160,13 @@ export async function deleteFile(fileId: string){
 }
 
 export async function getRecentPosts(){
+    const posts = await databases.listDocuments(
+        appwriteconfig.databaseId,
+        appwriteconfig.postCollectionId,
+        [Query.orderDesc('$createdAt'), Query.limit(20)]
+    );
 
+    if(!posts)throw Error
+
+    return posts;
 }
