@@ -157,3 +157,7 @@ export async function deleteFile(fileId: string){
         console.log(error)
     }
 }
+
+export async function getRecentPosts(){
+
+}
