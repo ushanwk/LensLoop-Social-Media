@@ -1,7 +1,6 @@
 import {INewPost, INewUser} from "@/types";
 import {ID, Query} from 'appwrite'
 import {account, appwriteconfig, avatars, databases, storage} from "@/lib/appwrite/config.ts";
-import {data} from "autoprefixer";
 
 export async function createUserAccount(user:INewUser) {
     try{
@@ -91,21 +90,24 @@ export async function signOutAccount(){
     }
 }
 
-export async function createPost(post: INewPost){
+export async function createPost(post: INewPost) {
     try {
+        // Upload file to appwrite storage
         const uploadedFile = await uploadFile(post.file[0]);
 
-        if(!uploadedFile)throw Error;
+        if (!uploadedFile) throw Error;
 
-        const fileUrl = getFilePreview(uploadedFile.$id)
-
-        if(!fileUrl){
-            deleteFile(uploadedFile.$id);
+        // Get file url
+        const fileUrl = getFilePreview(uploadedFile.$id);
+        if (!fileUrl) {
+            await deleteFile(uploadedFile.$id);
             throw Error;
         }
 
-        const tags = post.tags?.replace(/ /g, '').split(',') || []
+        // Convert tags into array
+        const tags = post.tags?.replace(/ /g, "").split(",") || [];
 
+        // Create post
         const newPost = await databases.createDocument(
             appwriteconfig.databaseId,
             appwriteconfig.postCollectionId,
@@ -116,57 +118,77 @@ export async function createPost(post: INewPost){
                 imageUrl: fileUrl,
                 imageId: uploadedFile.$id,
                 location: post.location,
-                tags: tags
+                tags: tags,
             }
-        )
+        );
 
-        if(!newPost){
-            await deleteFile(uploadedFile.$id)
-            throw Error
+        if (!newPost) {
+            await deleteFile(uploadedFile.$id);
+            throw Error;
         }
 
         return newPost;
-
-    }catch (error){
-        console.log(error)
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export async function uploadFile(file: File){
+export async function uploadFile(file: File) {
     try {
-        const uploadedFile = await storage.createFile(appwriteconfig.storageId, ID.unique(), file);
+        const uploadedFile = await storage.createFile(
+            appwriteconfig.storageId,
+            ID.unique(),
+            file
+        );
+
         return uploadedFile;
-    }catch (error){
-        console.log(error)
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export async function getFilePreview(fileId: string){
+export function getFilePreview(fileId: string) {
     try {
-        const fileUrl = storage.getFilePreview(appwriteconfig.storageId, fileId, 2000, 2000, "top", 100)
-        return fileUrl
-    }catch (error){
-        console.log(error)
+        const fileUrl = storage.getFilePreview(
+            appwriteconfig.storageId,
+            fileId,
+            2000,
+            2000,
+            "top",
+            100
+        );
+
+        if (!fileUrl) throw Error;
+
+        return fileUrl;
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export async function deleteFile(fileId: string){
+
+export async function deleteFile(fileId: string) {
     try {
-        await storage.deleteFile(appwriteconfig.storageId, fileId)
-        return {status: 'ok'}
-    }catch (error){
-        console.log(error)
+        await storage.deleteFile(appwriteconfig.storageId, fileId);
+
+        return { status: "ok" };
+    } catch (error) {
+        console.log(error);
     }
 }
 
-export async function getRecentPosts(){
-    const posts = await databases.listDocuments(
-        appwriteconfig.databaseId,
-        appwriteconfig.postCollectionId,
-        [Query.orderDesc('$createdAt'), Query.limit(20)]
-    );
+export async function getRecentPosts() {
+    try {
+        const posts = await databases.listDocuments(
+            appwriteconfig.databaseId,
+            appwriteconfig.postCollectionId,
+            [Query.orderDesc("$createdAt"), Query.limit(20)]
+        );
 
-    if(!posts)throw Error
+        if (!posts) throw Error;
 
-    return posts;
+        return posts;
+    } catch (error) {
+        console.log(error);
+    }
 }
