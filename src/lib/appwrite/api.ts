@@ -1,6 +1,6 @@
-import {INewUser} from "@/types";
+import {INewPost, INewUser} from "@/types";
 import {ID, Query} from 'appwrite'
-import {account, appwriteconfig, avatars, databases} from "@/lib/appwrite/config.ts";
+import {account, appwriteconfig, avatars, databases, storage} from "@/lib/appwrite/config.ts";
 
 export async function createUserAccount(user:INewUser) {
     try{
@@ -86,6 +86,74 @@ export async function signOutAccount(){
         const session = await account.deleteSession("current");
         return session;
     }catch(error){
+        console.log(error)
+    }
+}
+
+export async function createPost(post: INewPost){
+    try {
+        const uploadedFile = await uploadFile(post.file[0]);
+
+        if(!uploadedFile)throw Error;
+
+        const fileUrl = getFilePreview(uploadedFile.$id)
+
+        if(!fileUrl){
+            deleteFile(uploadedFile.$id);
+            throw Error;
+        }
+
+        const tags = post.tags?.replace(/ /g, '').split(',') || []
+
+        const newPost = await databases.createDocument(
+            appwriteconfig.databaseId,
+            appwriteconfig.postCollectionId,
+            ID.unique(),
+            {
+                creator: post.userId,
+                caption: post.caption,
+                imageUrl: fileUrl,
+                imageId: uploadedFile.$id,
+                location: post.location,
+                tags: tags
+            }
+        )
+
+        if(!newPost){
+            await deleteFile(uploadedFile.$id)
+            throw Error
+        }
+
+        return newPost;
+
+    }catch (error){
+        console.log(error)
+    }
+}
+
+export async function uploadFile(file: File){
+    try {
+        const uploadedFile = await storage.createFile(appwriteconfig.storageId, ID.unique(), file);
+        return uploadedFile;
+    }catch (error){
+        console.log(error)
+    }
+}
+
+export async function getFilePreview(fileId: string){
+    try {
+        const fileUrl = storage.getFilePreview(appwriteconfig.storageId, fileId, 2000, 2000, "top", 100)
+        return fileUrl
+    }catch (error){
+        console.log(error)
+    }
+}
+
+export async function deleteFile(fileId: string){
+    try {
+        await storage.deleteFile(appwriteconfig.storageId, fileId)
+        return {status: 'ok'}
+    }catch (error){
         console.log(error)
     }
 }
