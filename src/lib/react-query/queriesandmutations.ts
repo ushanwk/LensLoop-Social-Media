@@ -6,7 +6,7 @@ import {
 import {
     createPost,
     createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById,
-    getRecentPosts, getUserPosts, getUsers,
+    getRecentPosts, getUserById, getUserPosts, getUsers,
     likePost, savePost, searchPosts,
     signInAccount,
     signOutAccount, updatePost
@@ -194,5 +194,13 @@ export const useGetUsers = (limit?: number) => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_USERS],
         queryFn: () => getUsers(limit),
+    });
+};
+
+export const useGetUserById = (userId: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_USER_BY_ID, userId],
+        queryFn: () => getUserById(userId),
+        enabled: !!userId,
     });
 };

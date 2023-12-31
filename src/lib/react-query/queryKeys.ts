@@ -1,11 +1,6 @@
 export enum QUERY_KEYS{
-    // AUTH KEYS
     CREATE_USER_ACCOUNT = "createUserAccount",
-
-    // USER KEYS
     GET_CURRENT_USER = "getCurrentUser",
-
-    // POST KEYS
     GET_POSTS = "getPosts",
     GET_RECENT_POSTS = "getRecentPosts",
     GET_USER_POSTS = "getUserPosts",
@@ -13,5 +8,6 @@ export enum QUERY_KEYS{
     GET_INFINITE_POSTS = "getInfinitePosts",
     SEARCH_POSTS = "getSearchPosts",
     GET_USERS = "getUsers",
+    GET_USER_BY_ID = "getUserById",
 
 }
