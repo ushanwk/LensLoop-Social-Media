@@ -8,6 +8,7 @@ export enum QUERY_KEYS{
     // POST KEYS
     GET_POSTS = "getPosts",
     GET_RECENT_POSTS = "getRecentPosts",
+    GET_USER_POSTS = "getUserPosts",
     GET_POST_BY_ID = "getPostById",
 
 }
