@@ -5,15 +5,24 @@ import {useGetPosts, useSearchPosts} from "@/lib/react-query/queriesandmutations
 import useDebounce from "@/hooks/UseDebounce.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import SearchResults from "@/components/shared/SearchResults.tsx";
+import { useInView } from "react-intersection-observer";
 
 
 const Explore = () => {
+
+    const { ref, inView } = useInView()
 
     const { data: posts, fetchNextPage, hasNextPage } = useGetPosts();
 
     const [searchValue, setSearchValue] = useState("");
     const debouncedSearch = useDebounce(searchValue, 500);
     const { data: searchedPosts, isFetching: isSearchFetching } = useSearchPosts(debouncedSearch);
+
+    useEffect(() => {
+        if (inView && !searchValue) {
+            fetchNextPage();
+        }
+    }, [inView, searchValue]);
 
     if (!posts)
         return (
@@ -78,6 +87,15 @@ const Explore = () => {
                     ))
                 )}
             </div>
+
+            {
+                hasNextPage && !searchValue && (
+                    <div ref={ref} className="mt-10">
+                        <Loader />
+                    </div>
+                )
+            }
+
         </div>
     );
 };
